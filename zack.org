@@ -32,7 +32,8 @@ Of course, all based on [[http://doc.norang.ca/org-mode.html][norang]]
 
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files (quote ("~/org/main.org"
-                                 "~/org/rwgps.org")))
+                                 "~/org/rwgps.org"
+                                 "~/org/refile.org")))
 #+END_SRC
 *** Custom agenda views
 
@@ -489,8 +490,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 ** Clocking in
 
 #+BEGIN_SRC emacs-lisp
-;; Change tasks to NEXT when clocking in
-(setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
 ;; Separate drawers for clocking and logs
 (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
 ;; Save clock data and state changes and notes in the LOGBOOK drawer
@@ -501,19 +500,14 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 (setq org-clock-out-when-done t)
 ;; Include current clocking task in clock reports
 (setq org-clock-report-include-clocking-task t)
+#+END_SRC
+** Babel
+Add ruby support
 
-(defun bh/clock-in-to-next (kw)
-  "Switch a task from TODO to NEXT when clocking in.
-Skips capture tasks, projects, and subprojects.
-Switch projects and subprojects from NEXT back to TODO"
-  (when (not (and (boundp 'org-capture-mode) org-capture-mode))
-    (cond
-     ((and (member (org-get-todo-state) (list "TODO"))
-           (bh/is-task-p))
-      "NEXT")
-     ((and (member (org-get-todo-state) (list "NEXT"))
-           (bh/is-project-p))
-      "TODO"))))
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ruby . t)))
 #+END_SRC
 
 
